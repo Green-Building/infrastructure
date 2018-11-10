@@ -10,7 +10,8 @@ public class Floor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long floorId;
+    private Long floorId; /**Do we really need this???*/
+    private String floorNumber;
     private String building;
 
     public Long getId() {
@@ -29,6 +30,8 @@ public class Floor {
 
     public void setBuilding(String building) { this.building = building; }
 
+    public String getFloorNumber() { return floorNumber; }
 
+    public void setFloorNumber(String floorNumber) { this.floorNumber = floorNumber; }
 
 }

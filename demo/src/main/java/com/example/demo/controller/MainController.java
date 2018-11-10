@@ -5,21 +5,18 @@ import com.example.demo.model.Node;
 import com.example.demo.model.Sensor;
 import com.example.demo.model.SensorData;
 import com.example.demo.model.Building;
-import com.example.demo.repository.ClusterRepository;
-import com.example.demo.repository.NodeRepository;
-import com.example.demo.repository.SensorDataRepository;
-import com.example.demo.repository.SensorRepository;
-import com.example.demo.repository.BuildingRepository;
+import com.example.demo.repository.*;
+import com.sun.xml.internal.rngom.dt.builtin.BuiltinDatatypeLibrary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.util.Date;
 import java.util.List;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class MainController {
@@ -34,7 +31,11 @@ public class MainController {
     private SensorDataRepository sensorDataRepository;
     @Autowired
     private BuildingRepository buildingRepository;
-
+    @Autowired
+    private FloorRepository floorRepository;
+    @Autowired
+    private RoomRepository roomRepository;
+    
     /**
      *
      * @param model
@@ -55,6 +56,22 @@ public class MainController {
         return "resultBuilding";
     }
 
+    @CrossOrigin(origins = "*")
+    @RestController
+    @RequestMapping("demo")
+    public class addbuilding {
+        @RequestMapping("/add/building")
+        public Building getBuilding(){
+            return new Building();
+        }
+    }
+
+
+    /**
+     * Get add room html.
+     */
+
+
     /**
      * Get add cluster html.
      * @param model new Cluster();
@@ -74,7 +91,6 @@ public class MainController {
     public String addclusterSubmit(@ModelAttribute Cluster cluster) {
         cluster.setStatus("active");
         clusterRepository.save(cluster);
-
         return "resultCluster";
     }
 
