@@ -1,37 +1,50 @@
 package com.example.demo.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Floor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private Long floorId; /**Do we really need this???*/
-    private String floorNumber;
-    private String building;
+    private Long floor_id;
+    private String floor_number;
 
-    public Long getId() {
-        return id;
+    @ManyToOne
+    private Building building;
+
+    protected Floor(){
+
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Floor(long floor_id, String floor_number){
+        this.floor_id = floor_id;
+        this.floor_number = floor_number;
     }
 
-    public Long getFloorId() { return floorId; }
+    public Long getFloor_id() {
+        return floor_id;
+    }
 
-    public void setFloorId(Long floorId) { this.floorId = floorId; }
+    public void setFloor_id(Long floor_id) {
+        this.floor_id = floor_id;
+    }
 
-    public String getBuilding() { return building; }
+    public String getFloor_number() {
+        return floor_number;
+    }
 
-    public void setBuilding(String building) { this.building = building; }
+    public void setFloor_number(String floor_number) {
+        this.floor_number = floor_number;
+    }
 
-    public String getFloorNumber() { return floorNumber; }
+    public Building getBuilding() {
+        return building;
+    }
 
-    public void setFloorNumber(String floorNumber) { this.floorNumber = floorNumber; }
+    public void setBuilding(Building building) {
+        this.building = building;
+    }
+
+
 
 }

@@ -1,59 +1,31 @@
 package com.example.demo.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Cluster {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String name;
-    private String floor;
-    private String status;
-    private Long buildingId;
+    private Long cluster_id;
 
-    public Long getId() {
-        return id;
+    @OneToMany
+    private Set<Node> nodes = new HashSet<>();
+
+    public Long getCluster_id() {
+        return cluster_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCluster_id(Long cluster_id) {
+        this.cluster_id = cluster_id;
     }
 
-    public String getName() {
-        return name;
+    public Set<Node> getNodes() {
+        return nodes;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNodes(Set<Node> nodes) {
+        this.nodes = nodes;
     }
-
-    public String getFloor() {
-        return floor;
-    }
-
-    public void setFloor(String floor) {
-        this.floor = floor;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Long getBuildingId() {
-        return buildingId;
-    }
-
-    public void setBuildingId(Long buildingId) {
-        this.buildingId = buildingId;
-    }
-
-
 }

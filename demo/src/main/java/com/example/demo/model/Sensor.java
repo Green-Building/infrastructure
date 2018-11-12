@@ -1,28 +1,28 @@
 package com.example.demo.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class Sensor {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long sensor_id;
     private String name;
     private String type;
+    private Date install_time;
     private String status;
 
-    private Long nodeId;
-    private Long clusterId;
+    @ManyToOne
+    private Node node;
+    private Cluster cluster;
 
-    public Long getId() {
-        return id;
+    public Long getSensor_id() {
+        return sensor_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setSensor_id(Long sensor_id) {
+        this.sensor_id = sensor_id;
     }
 
     public String getName() {
@@ -41,20 +41,12 @@ public class Sensor {
         this.type = type;
     }
 
-    public Long getNodeId() {
-        return nodeId;
+    public Date getInstall_time() {
+        return install_time;
     }
 
-    public void setNodeId(Long nodeId) {
-        this.nodeId = nodeId;
-    }
-
-    public Long getClusterId() {
-        return clusterId;
-    }
-
-    public void setClusterId(Long clusterId) {
-        this.clusterId = clusterId;
+    public void setInstall_time(Date install_time) {
+        this.install_time = install_time;
     }
 
     public String getStatus() {
@@ -63,6 +55,22 @@ public class Sensor {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Node getNode() {
+        return node;
+    }
+
+    public void setNode(Node node) {
+        this.node = node;
+    }
+
+    public Cluster getCluster() {
+        return cluster;
+    }
+
+    public void setCluster(Cluster cluster) {
+        this.cluster = cluster;
     }
 }
 

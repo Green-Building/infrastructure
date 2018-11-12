@@ -9,31 +9,41 @@ import javax.persistence.Id;
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private Long roomId;
-    private String floor;
-    private String building;
+    private Long room_id;
+    private Long floor_id;
+    private Long building_id;
+    private String room_number;
 
-    public Long getId() {
-        return id;
+    public Long getRoom_id() {
+        return room_id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setRoom_id(Long room_id) {
+        this.room_id = room_id;
     }
 
-    public Long getRoomId() { return roomId; }
+    public Long getFloor_id() {
+        return floor_id;
+    }
 
-    public void setRoomId(Long roomId) { this.roomId = roomId; }
+    public void setFloor_id(Long floor_id) {
+        this.floor_id = floor_id;
+    }
 
-    public String getFloor() { return floor; }
+    public Long getBuilding_id() {
+        return building_id;
+    }
 
-    public void setFloor(String floor) { this.floor = floor; }
+    public void setBuilding_id(Long building_id) {
+        this.building_id = building_id;
+    }
 
-    public String getBuilding() { return building; }
+    public String getRoom_number() {
+        return room_number;
+    }
 
-    public void setBuilding(String building) { this.building = building; }
-
-
+    public void setRoom_number(String room_number) {
+        this.room_number = room_number;
+    }
 
 }
