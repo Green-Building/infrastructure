@@ -19,12 +19,6 @@ public class Building {
     private String image_url;
 
 
-    @OneToMany
-    private Set<Floor> floors = new HashSet<>();
-
-    @OneToMany
-    private Set<Cluster> clusters = new HashSet<>();
-
     public Long getId() {
         return id;
     }
@@ -94,22 +88,6 @@ public class Building {
 
     public void setImage_url(String image_url) {
         this.image_url = image_url;
-    }
-
-    public Set<Floor> getFloors() {
-        return floors;
-    }
-
-    public void setFloors(Set<Floor> floors) {
-        this.floors = floors;
-    }
-
-    public Set<Cluster> getClusters() {
-        return clusters;
-    }
-
-    public void setClusters(Set<Cluster> clusters) {
-        this.clusters = clusters;
     }
 
 }
