@@ -15,12 +15,8 @@ public class Node {
     private String series_number;
     private Date install_time;
     private String room_id;
+    private Long cluster_id;
 
-    @ManyToOne
-    private Cluster cluster;
-
-    @OneToMany
-    private Set<Room> rooms = new HashSet<>();
 
     public Long getNode_id() {
         return node_id;
@@ -70,19 +66,12 @@ public class Node {
         this.room_id = room_id;
     }
 
-    public Cluster getCluster() {
-        return cluster;
+    public long getCluster_id() {
+        return cluster_id;
     }
 
-    public void setCluster(Cluster cluster) {
-        this.cluster = cluster;
+    public void setCluster_id(long cluster_id) {
+        this.cluster_id = cluster_id;
     }
 
-    public Set<Room> getRooms() {
-        return rooms;
-    }
-
-    public void setRooms(Set<Room> rooms) {
-        this.rooms = rooms;
-    }
 }

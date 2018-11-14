@@ -10,22 +10,11 @@ public class Cluster {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long cluster_id;
 
-    @OneToMany
-    private Set<Node> nodes = new HashSet<>();
-
     public Long getCluster_id() {
         return cluster_id;
     }
 
     public void setCluster_id(Long cluster_id) {
         this.cluster_id = cluster_id;
-    }
-
-    public Set<Node> getNodes() {
-        return nodes;
-    }
-
-    public void setNodes(Set<Node> nodes) {
-        this.nodes = nodes;
     }
 }

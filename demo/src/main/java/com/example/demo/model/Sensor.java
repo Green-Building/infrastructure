@@ -13,10 +13,6 @@ public class Sensor {
     private Date install_time;
     private String status;
 
-    @ManyToOne
-    private Node node;
-    private Cluster cluster;
-
     public Long getSensor_id() {
         return sensor_id;
     }
@@ -55,22 +51,6 @@ public class Sensor {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Node getNode() {
-        return node;
-    }
-
-    public void setNode(Node node) {
-        this.node = node;
-    }
-
-    public Cluster getCluster() {
-        return cluster;
-    }
-
-    public void setCluster(Cluster cluster) {
-        this.cluster = cluster;
     }
 }
 

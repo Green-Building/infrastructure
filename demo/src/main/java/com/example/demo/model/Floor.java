@@ -9,8 +9,6 @@ public class Floor {
     private Long floor_id;
     private String floor_number;
 
-    @ManyToOne
-    private Building building;
 
     protected Floor(){
 
@@ -35,14 +33,6 @@ public class Floor {
 
     public void setFloor_number(String floor_number) {
         this.floor_number = floor_number;
-    }
-
-    public Building getBuilding() {
-        return building;
-    }
-
-    public void setBuilding(Building building) {
-        this.building = building;
     }
 
 
