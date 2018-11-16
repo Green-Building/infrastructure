@@ -1,35 +1,33 @@
-package com.example.demo.model;
+package com.example.demo.nested;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import javax.persistence.*;
+import com.example.demo.model.*;
 import java.util.Date;
+import java.util.List;
 
-@JsonPropertyOrder({
-        "sensor_id",
-        "node_id",
-        "cluster_id",
-        "name",
-        "type",
-        "series_number",
-        "install_time",
-        "status",
-})
-
-@Entity
-public class Sensor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class nodeNested {
     private long id;
-    private long node_id;
     private long cluster_id;
+    private long room_id;
     private String name;
     private String type;
     private String series_number;
     private Date install_time;
     private String status;
+    private List<Sensor> sensors;
+
+    public nodeNested(Node node, List<Sensor> sensors) {
+        this.id = node.getId();
+        this.cluster_id = node.getCluster_id();
+        this.room_id = node.getRoom_id();
+        this.name = node.getName();
+        this.type = node.getType();
+        this.series_number = node.getSeries_number();
+        this.install_time = node.getInstall_time();
+        this.status = node.getStatus();
+        this.sensors = sensors;
+    }
 
     public long getId() {
         return id;
@@ -39,20 +37,20 @@ public class Sensor {
         this.id = id;
     }
 
-    public long getNode_id() {
-        return node_id;
-    }
-
-    public void setNode_id(long node_id) {
-        this.node_id = node_id;
-    }
-
     public long getCluster_id() {
         return cluster_id;
     }
 
     public void setCluster_id(long cluster_id) {
         this.cluster_id = cluster_id;
+    }
+
+    public long getRoom_id() {
+        return room_id;
+    }
+
+    public void setRoom_id(long room_id) {
+        this.room_id = room_id;
     }
 
     public String getName() {
@@ -94,16 +92,12 @@ public class Sensor {
     public void setStatus(String status) {
         this.status = status;
     }
-    @Override
-    public String toString() {
-        ObjectMapper mapper = new ObjectMapper();
-        String json = "";
-        try {
-            json = mapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return json;
+
+    public List<Sensor> getSensors() {
+        return sensors;
+    }
+
+    public void setSensors(List<Sensor> sensors) {
+        this.sensors = sensors;
     }
 }
-

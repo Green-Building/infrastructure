@@ -1,18 +1,28 @@
-package com.example.demo.model;
+package com.example.demo.nested;
 
-import javax.persistence.*;
+import com.example.demo.model.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.*;
 
-@Entity
-@Table(name = "room")
-public class Room {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+
+public class roomNested {
+
     private long id;
     private long floor_id;
     private long building_id;
     private Integer room_number;
+    private Node node;
+    private List<Sensor> sensors;
+
+    public roomNested(Room room, Node node, List<Sensor> sensors) {
+        this.id = room.getId();
+        this.floor_id = room.getFloor_id();
+        this.building_id = room.getBuilding_id();
+        this.room_number = room.getRoom_number();
+        this.node = node;
+        this.sensors = sensors;
+    }
 
     public long getId() {
         return id;
@@ -44,6 +54,22 @@ public class Room {
 
     public void setRoom_number(Integer room_number) {
         this.room_number = room_number;
+    }
+
+    public Node getNode() {
+        return node;
+    }
+
+    public void setNode(Node node) {
+        this.node = node;
+    }
+
+    public List<Sensor> getSensors() {
+        return sensors;
+    }
+
+    public void setSensors(List<Sensor> sensors) {
+        this.sensors = sensors;
     }
 
     @Override

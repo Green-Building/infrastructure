@@ -1,21 +1,14 @@
+
 package com.example.demo.controller;
 
 import com.example.demo.model.*;
+import com.example.demo.service.*;
 import com.example.demo.repository.*;
+import com.example.demo.nested.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.stereotype.Controller;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.apache.http.impl.client.HttpClients;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import java.util.*;
+import org.springframework.ui.Model;
 
 
 
@@ -24,257 +17,223 @@ import java.util.List;
 public class MainController {
 
     @Autowired
+    private roomService roomService;
+    @Autowired
+    private floorService floorService;
+    @Autowired
+    private buildingService buildingService;
+
+    @Autowired
+    private clusterService clusterService;
+    @Autowired
+    private nodeService nodeService;
+    @Autowired
+    private sensorService sensorService;
+
+    @Autowired
     private ClusterRepository clusterRepository;
     @Autowired
     private NodeRepository nodeRepository;
     @Autowired
     private SensorRepository sensorRepository;
-    @Autowired
-    private SensorDataRepository sensorDataRepository;
-    @Autowired
-    private BuildingRepository buildingRepository;
-    @Autowired
-    private FloorRepository floorRepository;
-    @Autowired
-    private RoomRepository roomRepository;
 
+
+    /**
+     *
+     * Add
+     */
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/buildings")
-    Building addBuilding(Building building){
-        return building;
+    @PostMapping("/buildings")
+    public String addBuilding(@RequestBody Building building){
+        return buildingService.saveBuildingtoDB(building);
     }
 
 
+    @CrossOrigin(origins = "*")
+    @PostMapping("/floors")
+    public String addFloor(@RequestBody Floor floor){
+        return floorService.saveFloortoDB(floor);
+    }
 
-//    @GetMapping(value = "/buildings")
-//    Building addBuilding(String json){
-//    }
-//    public String addBuildingForm(Model model) {
-//        model.addAttribute("building", new Building());
-//        return "addBuilding";
-//    }
-//
-//    @CrossOrigin(origins = "*")
-//    @PostMapping("/add/building")
-//    public String addBuildingSubmit(@ModelAttribute Building building) {
-//        buildingRepository.save(building);
-//        return "resultBuilding";
-//    }
-//
-//    @CrossOrigin(origins = "*")
-//    @RestController
-//    @RequestMapping("demo")
-//    public class addbuilding {
-//        @RequestMapping("/add/building")
-//        public Building getBuilding(){
-//            return new Building();
-//        }
-//    }
-//
-//
-//    /**
-//     * Get add room html.
-//     */
-//
-//
-//    /**
-//     * Get add cluster html.
-//     * @param model new Cluster();
-//     * @return addCluster.html;
-//     */
-//
-//    @CrossOrigin(origins = ("*"))
-//    @GetMapping("/add/cluster")
-//    public String addClusterForm (Model model) {
-//        model.addAttribute("cluster", new Cluster());
-//        model.addAttribute("buildings", buildingRepository.findAll());
-//        return "addCluster";
-//    }
-//
-//    @CrossOrigin(origins = ("*"))
-//    @PostMapping("/add/cluster")
-//    public String addclusterSubmit(@ModelAttribute Cluster cluster) {
-//        cluster.setStatus("active");
-//        clusterRepository.save(cluster);
-//        return "resultCluster";
-//    }
-//
-//    /**
-//     * Get add node html.
-//     * @param model new Node();
-//     * @return addNode.html;
-//     */
-//
-//    @CrossOrigin(origins = ("*"))
-//    @GetMapping("/add/node")
-//    public String addNodeForm (Model model) {
-//        model.addAttribute("node", new Node());
-//        model.addAttribute("clusters", clusterRepository.findAll());
-//        return "addNode";
-//    }
-//
-//    @CrossOrigin(origins = ("*"))
-//    @PostMapping("/add/node")
-//    public String addnodeSubmit(@ModelAttribute Node node) {
-//        node.setStatus("active");
-//        nodeRepository.save(node);
-//        return "resultNode";
-//    }
-//
-//    /**
-//     * Get add sensor html.
-//     * @param model new Sensor();
-//     * @return addSensor.html;
-//     */
-//
-//    @CrossOrigin(origins = ("*"))
-//    @GetMapping("/add/sensor")
-//    public String addSensorForm (Model model) {
-//        model.addAttribute("sensor", new Sensor());
-//        model.addAttribute("clusters",clusterRepository.findAll());
-//        model.addAttribute("nodes", nodeRepository.findAll());
-//        return "addSensor";
-//    }
-//
-//    @CrossOrigin(origins = ("*"))
-//    @PostMapping("/add/sensor")
-//    public String addsensorSubmit(@ModelAttribute Sensor sensor) {
-//        Long nodeId = sensor.getNodeId();
-//        /**
-//         * Do not forget .get();
-//         */
-//        Node node = nodeRepository.findById(nodeId).get();
-//        sensor.setClusterId(node.getClusterId());
-//        sensor.setStatus("active");
-//        sensorRepository.save(sensor);
-//
-//        SensorData sensorData = new SensorData();
-//        sensorData.setNodeId(sensor.getNodeId());
-//        sensorData.setSensorId(sensor.getId());
-//        sensorData.setSensorType(sensor.getType());
-//        sensorData.setSensorData(0.00);
-//        sensorData.setClusterId(sensor.getClusterId());
-//        sensorDataRepository.save(sensorData);
-//        return "resultSensor";
-//    }
-//
-//    @CrossOrigin(origins = ("*"))
-//    @GetMapping(value = "/delete/cluster/{cluster_id}")
-//    public @ResponseBody Iterable<Cluster> deleteClusterByClusterId (@PathVariable final String cluster_id){
-//        Long clusterId = Long.valueOf(cluster_id).longValue();
-//        clusterRepository.deleteById(clusterId);
-//        nodeRepository.deleteNodeByClusterId(clusterId);
-//        sensorRepository.deleteSensorByClusterId(clusterId);
-//        sensorDataRepository.deleteSensorDataByClusterId(clusterId);
-//        return clusterRepository.findAll();
-//    }
-//
-//    @CrossOrigin(origins = ("*"))
-//    @GetMapping(value = "delete/node/{node_id}")
-//    public @ResponseBody Iterable<Node> deleteNodeByNodeId(@PathVariable final String node_id) {
-//        Long nodeId = Long.valueOf(node_id).longValue();
-//        nodeRepository.deleteById(nodeId);
-//        sensorRepository.deleteSensorByNodeId(nodeId);
-//        sensorDataRepository.deleteSensorDataByNodeId(nodeId);
-//        return nodeRepository.findAll();
-//    }
-//
-//    @CrossOrigin(origins = ("*"))
-//    @GetMapping(value = "delete/sensor/{sensor_id}")
-//    public @ResponseBody Iterable<Sensor> deleteSensorBySensorId(@PathVariable final String sensor_id) {
-//        Long sensorId = Long.valueOf(sensor_id).longValue();
-//        sensorRepository.deleteById(sensorId);
-//        sensorDataRepository.deleteSensorDataBySensorId(sensorId);
-//        return sensorRepository.findAll();
-//    }
-//
-//    @CrossOrigin(origins = ("*"))
-//    @GetMapping(value = "deactive/cluster/{cluster_id}")
-//    public @ResponseBody Cluster deactiveClusterByClusterId(@PathVariable final String cluster_id) {
-//        Long clusterId = Long.valueOf(cluster_id).longValue();
-//        clusterRepository.updateClusterStatusById("deactive", clusterId);
-//        nodeRepository.updateNodeStatusByClusterId("deactive",clusterId);
-//        sensorRepository.updateSensorStatusByClusterId("deactive", clusterId);
-//        sensorDataRepository.updateSensorDataValueByClusterId(99999.99, clusterId);
-//        return clusterRepository.findById(clusterId).get();
-//    }
-//
-//    @CrossOrigin(origins = ("*"))
-//    @GetMapping(value = "active/cluster/{cluster_id}")
-//    public @ResponseBody Cluster activeClusterByClusterId(@PathVariable final String cluster_id) {
-//        Long clusterId = Long.valueOf(cluster_id).longValue();
-//        clusterRepository.updateClusterStatusById("active", clusterId);
-//        return clusterRepository.findById(clusterId).get();
-//    }
-//
-//    @CrossOrigin(origins = ("*"))
-//    @GetMapping(value = "update/sensordata/{cluster_id}")
-//    public @ResponseBody Iterable<SensorData> updateSensorDataByClusterId(@PathVariable final String cluster_id) {
-//        Long clusterId = Long.valueOf(cluster_id).longValue();
-//        List<SensorData> sensorDataList = sensorDataRepository.findSensorDataByClusterId(clusterId);
-//
-//        for (int i = 0; i < sensorDataList.size(); i++) {
-//            sensorDataList.get(i).updateSensorDataRandom();
-//            Double randomValue = sensorDataList.get(i).getSensorData();
-//            Long sensorDataId = sensorDataList.get(i).getId();
-//            sensorDataRepository.updateSensorDataValueBySensorDataId(randomValue, sensorDataId);
-//        }
-//
-//        return sensorDataRepository.findSensorDataByClusterId(clusterId);
-//    }
-//
-//    @CrossOrigin(origins = "*")
-//    @GetMapping(path = "/get/cluster/all")
-//    public @ResponseBody Iterable<Cluster> getAllClusters() {
-//        return clusterRepository.findAll();
-//    }
-//
-//
-//    @CrossOrigin(origins = "*")
-//    @GetMapping(path = "/get/cluster/{cluster_id}")
-//    public @ResponseBody Cluster getClusterByClusterId(@PathVariable final String cluster_id) {
-//        Long clusterId = Long.valueOf(cluster_id).longValue();
-//        return clusterRepository.findById(clusterId).get();
-//    }
-//
-//    @CrossOrigin(origins = "*")
-//    @GetMapping(path = "get/node/all")
-//    public @ResponseBody Iterable<Node> getAllNodes() {
-//        return nodeRepository.findAll();
-//    }
-//
-//    @CrossOrigin(origins = "*")
-//    @GetMapping(path = "/get/node/{node_id}")
-//    public @ResponseBody Node getNodeByNodeId(@PathVariable final String node_id) {
-//        Long nodeId = Long.valueOf(node_id).longValue();
-//        return nodeRepository.findById(nodeId).get();
-//    }
-//
-//    @CrossOrigin(origins = "*")
-//    @GetMapping(path = "/get/sensor/all")
-//    public @ResponseBody Iterable<Sensor> getAllSensors() {
-//        return  sensorRepository.findAll();
-//    }
-//
-//    @CrossOrigin(origins = "*")
-//    @GetMapping(path = "/get/sensor/{sensor_id}")
-//    public @ResponseBody Sensor getSensorBySensorId(@PathVariable final String sensor_id) {
-//        Long sensorId = Long.valueOf(sensor_id).longValue();
-//        return sensorRepository.findById(sensorId).get();
-//    }
-//
-//    @CrossOrigin(origins = "*")
-//    @GetMapping(path = "/get/sensordata/all")
-//    public @ResponseBody Iterable<SensorData> getAllSensorsData() {
-//        return  sensorDataRepository.findAll();
-//    }
-//
-//    @CrossOrigin(origins =  "*")
-//    @GetMapping(path ="/get/sensordata/{cluster_id}")
-//    public @ResponseBody Iterable<SensorData> getSensorDataByClusterId(@PathVariable final String cluster_id) {
-//        Long clusterId = Long.valueOf(cluster_id).longValue();
-//        return sensorDataRepository.findSensorDataByClusterId(clusterId);
-//    }
+    @CrossOrigin(origins = "*")
+    @PostMapping("/rooms")
+    public String addRoom(@RequestBody Room room){
+        return roomService.saveRoomtoDB(room);
+    }
 
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/clusters")
+    public String addCluster(@RequestBody Cluster cluster){
+        return clusterService.addClustertoDB(cluster);
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/nodes")
+    public String addNode(@RequestBody Node node){
+        return nodeService.addNodetoDB(node);
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping("/sensors")
+    public String addSensor(@RequestBody Sensor sensor){
+        return sensorService.addSensortoDB(sensor);
+    }
+
+
+    /**
+     *
+     * search geocode
+     */
+    @CrossOrigin(origins = "*")
+    @GetMapping("/buildings/search/geocode")
+    public Iterable<Building> searchBuildingByLa(
+            @RequestParam final String latitude,
+            @RequestParam final String longitude,
+            @RequestParam(required = false) Integer radius){
+        return buildingService.searchBuildingByLa(latitude,longitude,radius);
+    }
+    public Iterable<Building> searchBuildingByCity(
+            @RequestParam final String city,
+            @RequestParam final String state,
+            @RequestParam final String zipcode)
+    {
+        return buildingService.searchBuildingByCity(city,state,zipcode);
+    }
+
+
+    /**
+     * delete
+     */
+
+    @CrossOrigin(origins = "*")
+    @GetMapping(value = "building_id")
+    public void deleteBuilding(
+            @PathVariable("building_id" ) final long building_id)
+    {
+        buildingService.deleteBuilding(building_id);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping(value = "floor_id")
+    public void deleteFloor(
+            @PathVariable("floor_id" ) final long floor_id)
+    {
+        floorService.deleteFloor(floor_id);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping(value = "room_id")
+    public void deleteRoom(
+            @PathVariable("room_id") final long room_id)
+    {
+        roomService.deleteRoom(room_id);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping(value = "cluster_id")
+    public void deleteCluster(
+            @PathVariable("cluster_id") final long cluster_id)
+    {
+        clusterService.deleteCluster(cluster_id);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping(value = "node_id")
+    public void deleteNode(
+            @PathVariable("node_id") final long node_id)
+    {
+        nodeService.deleteNode(node_id);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping(value = "sensor_id")
+    public void deleteSensor(
+            @PathVariable("sensor_id") final long sensor_id)
+    {
+        sensorService.deleteSensor(sensor_id);
+    }
+
+    /**
+     * fetch_nested
+     */
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/buildings/{building_id}")
+    public String getBuildingByBuildingId(
+            @PathVariable final long building_id,
+            Model model,
+            @RequestParam(value = "fetch_nested", required = false) final String nestedContent)
+    {
+
+        buildingNested buildingNest = buildingService.getBuildingNestedByBuildingId(building_id,"floor,cluster");
+        Map<Integer,Boolean> matchedRes = buildingService.getFloorCluterMatchResult(buildingNest);
+        model.addAttribute("matchedRes", matchedRes);
+        Cluster cluster = new Cluster();
+        model.addAttribute("cluster",cluster);
+
+        if(nestedContent==null)
+            return buildingService.getBuildingByBuildingId(building_id).toString();
+        else
+            return buildingService.getBuildingNestedByBuildingId(building_id,nestedContent).toString();
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/floors/{floor_id}")
+    public String getFloorByFloorId(
+            @PathVariable final long floor_id,
+            Model model,
+            @RequestParam(value = "fetch_nested", required = false) final String nestedContent)
+    {
+        floorNested floorNest = floorService.getFloorNestedByFloorId(floor_id,"room,node");
+
+        Map<Integer,Boolean> matchedRes = floorService.getRoomNodeMatchResult(floorNest);
+        model.addAttribute("matchedRes", matchedRes);
+        Node node = new Node();
+        model.addAttribute("node",node);
+
+        if(nestedContent==null)
+            return floorService.getFloorByFloorId(floor_id).toString();
+        else
+            return floorService.getFloorNestedByFloorId(floor_id,nestedContent).toString();
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/rooms/{room_id}")
+    public String getRoomByRoomId(
+            @PathVariable final long room_id,
+            @RequestParam(value = "fetch_nested",required = false) final String nestedContent)
+    {
+        if(nestedContent==null)
+            return roomService.getRoomByRoomId(room_id).toString();
+        else
+            return roomService.getRoomNestedByRoomId(room_id,nestedContent).toString();
+
+    }
+
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/clusters/{cluster_id}")
+    public String getClusterByClusterId(
+            @PathVariable final long cluster_id,
+            @RequestParam(value = "fetch_nested",required = false) final String nestedContent)
+    {
+        if(nestedContent==null)
+            return clusterService.getClusterByClusterId(cluster_id);
+        else
+            return clusterService.getClusterNestedByClusterId(cluster_id,nestedContent);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/nodes/{node_id}")
+    public String getNodeByNodeId(
+            @PathVariable final long node_id,
+            @RequestParam(value = "fetch_nested",required = false) final String nestedContent)
+    {
+        if(nestedContent==null)
+            return nodeService.getNodeByNodeId(node_id).toString();
+        else
+            return nodeService.getNodeNestedByNodeId(node_id,nestedContent).toString();
+    }
 }

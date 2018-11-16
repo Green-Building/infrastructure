@@ -1,27 +1,11 @@
-package com.example.demo.model;
+package com.example.demo.nested;
 
-import javax.persistence.*;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.example.demo.model.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 
-@JsonPropertyOrder({
-        "id",
-        "image_url",
-        "address",
-        "city",
-        "state",
-        "zipcode",
-        "num_of_floors",
-        "longitude",
-        "latitude"
-})
-
-@Entity
-@Table(name = "building")
-public class Building {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class buildingNested {
     private long id;
     private long image_url;
     private String address;
@@ -31,9 +15,25 @@ public class Building {
     private String num_of_floors;
     private Double longitude;
     private Double latitude;
+    private List<Floor> floors;
+    private List<Cluster> clusters;
 
+    public buildingNested(Building building, List<Floor> floors, List<Cluster> clusters)
+    {
+        this.id = building.getId();
+        this.image_url = building.getImage_url();
+        this.address = building.getAddress();
+        this.city = building.getCity();
+        this.state = building.getState();
+        this.zipcode = building.getZipcode();
+        this.num_of_floors = building.getNum_of_floors();
+        this.latitude = building.getLatitude();
+        this.longitude = building.getLongitude();
+        this.floors = floors;
+        this.clusters = clusters;
+    }
 
-    public long  getId() {
+    public long getId() {
         return id;
     }
 
@@ -105,6 +105,22 @@ public class Building {
         this.latitude = latitude;
     }
 
+    public List<Floor> getFloors() {
+        return floors;
+    }
+
+    public void setFloors(List<Floor> floors) {
+        this.floors = floors;
+    }
+
+    public List<Cluster> getClusters() {
+        return clusters;
+    }
+
+    public void setClusters(List<Cluster> clusters) {
+        this.clusters = clusters;
+    }
+
     @Override
     public String toString() {
         ObjectMapper mapper = new ObjectMapper();
@@ -116,5 +132,4 @@ public class Building {
         }
         return json;
     }
-
 }
