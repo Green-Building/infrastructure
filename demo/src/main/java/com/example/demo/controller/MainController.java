@@ -106,7 +106,7 @@ public class MainController {
      */
 
     @CrossOrigin(origins = "*")
-    @GetMapping(value = "building_id")
+    @DeleteMapping(value = "building_id")
     public void deleteBuilding(
             @PathVariable("building_id" ) final long building_id)
     {
@@ -114,7 +114,7 @@ public class MainController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(value = "floor_id")
+    @DeleteMapping(value = "floor_id")
     public void deleteFloor(
             @PathVariable("floor_id" ) final long floor_id)
     {
@@ -122,7 +122,7 @@ public class MainController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(value = "room_id")
+    @DeleteMapping(value = "room_id")
     public void deleteRoom(
             @PathVariable("room_id") final long room_id)
     {
@@ -130,7 +130,7 @@ public class MainController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(value = "cluster_id")
+    @DeleteMapping(value = "cluster_id")
     public void deleteCluster(
             @PathVariable("cluster_id") final long cluster_id)
     {
@@ -138,7 +138,7 @@ public class MainController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(value = "node_id")
+    @DeleteMapping(value = "node_id")
     public void deleteNode(
             @PathVariable("node_id") final long node_id)
     {
@@ -146,7 +146,7 @@ public class MainController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(value = "sensor_id")
+    @DeleteMapping(value = "sensor_id")
     public void deleteSensor(
             @PathVariable("sensor_id") final long sensor_id)
     {
