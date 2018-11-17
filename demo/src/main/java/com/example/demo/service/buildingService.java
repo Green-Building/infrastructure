@@ -65,6 +65,10 @@ public class buildingService {
         return res;
     }
 
+    public List<Object[]> countBuildingClustersAndNodes(long building_id) {
+        return buildingRepository.countBuildingClustersAndNodes(building_id);
+    }
+
     public void deleteBuilding(long building_id){
         Long buildingId = Long.valueOf(building_id).longValue();
 

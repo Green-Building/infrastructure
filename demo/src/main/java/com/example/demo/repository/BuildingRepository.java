@@ -2,9 +2,16 @@ package com.example.demo.repository;
 
 import com.example.demo.model.Building;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.*;
 
 
 public interface BuildingRepository extends CrudRepository<Building, Long> {
 
-
+    @Transactional
+    @Query(value="SELECT count(DISTINCT c.id), count(DISTINCT n.id) FROM building b INNER JOIN cluster c ON b.id = c.building_id LEFT JOIN node n ON c.id= n.cluster_id WHERE b.id = :building_id", nativeQuery = true)
+    List<Object[]> countBuildingClustersAndNodes(@Param("building_id") long building_id);
 }

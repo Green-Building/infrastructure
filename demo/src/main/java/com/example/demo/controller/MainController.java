@@ -114,6 +114,18 @@ public class MainController {
     }
 
     @CrossOrigin(origins = "*")
+    @GetMapping("/buildings/statistics/{building_id}")
+    public HashMap<String, Object> getBuildingStats(@PathVariable final long building_id)
+    {
+        List<Object[]> a = buildingService.countBuildingClustersAndNodes(building_id);
+        HashMap<String, Object> hmap = new HashMap<String, Object>();
+        Object[] count = a.get(0);
+        hmap.put("cluster_count", count[0]);
+        hmap.put("node_count", count[1]);
+        return hmap;
+    }
+
+    @CrossOrigin(origins = "*")
     @GetMapping(value = "floor_id")
     public void deleteFloor(
             @PathVariable("floor_id" ) final long floor_id)
@@ -130,10 +142,8 @@ public class MainController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping(value = "cluster_id")
-    public void deleteCluster(
-            @PathVariable("cluster_id") final long cluster_id)
-    {
+    @DeleteMapping("/clusters/{cluster_id}")
+    public void deleteCluster(@PathVariable final long cluster_id) {
         clusterService.deleteCluster(cluster_id);
     }
 
