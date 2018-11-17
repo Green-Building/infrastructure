@@ -65,9 +65,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/clusters")
-    public String addCluster(@RequestBody Cluster cluster){
-        return clusterService.addClustertoDB(cluster);
-    }
+    public String addCluster(@RequestBody Cluster cluster){ return clusterService.addClustertoDB(cluster); }
 
     @CrossOrigin(origins = "*")
     @PostMapping("/nodes")

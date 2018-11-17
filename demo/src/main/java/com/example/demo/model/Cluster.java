@@ -1,9 +1,22 @@
 package com.example.demo.model;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Date;
+
+@JsonPropertyOrder({
+        "cluster_id",
+        "name",
+        "type",
+        "series_number",
+        "install_time",
+        "status",
+        "building_id",
+        "floor_id",
+})
 
 @Entity
 @Table(name = "cluster")

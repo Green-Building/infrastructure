@@ -4,11 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.demo.repository.*;
 import com.example.demo.model.*;
-import com.example.demo.service.*;
 import com.example.demo.nested.*;
 import java.util.*;
-import javax.persistence.*;
-
 @Service
 public class buildingService {
 
