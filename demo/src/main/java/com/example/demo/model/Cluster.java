@@ -22,8 +22,6 @@ import java.util.Date;
 @Table(name = "cluster")
 public class Cluster {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-
     private long id;
     private long building_id;
     private long floor_id;

@@ -21,7 +21,6 @@ import java.util.Date;
 @Entity
 public class Sensor {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private long node_id;
     private long cluster_id;

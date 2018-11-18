@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Entity
 public class Node {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private long cluster_id;
     private long room_id;

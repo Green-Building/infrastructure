@@ -5,13 +5,14 @@ import com.example.demo.model.*;
 import com.example.demo.service.*;
 import com.example.demo.repository.*;
 import com.example.demo.nested.*;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import org.springframework.ui.Model;
-
-
-
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 public class MainController {
@@ -49,7 +50,6 @@ public class MainController {
         return buildingService.saveBuildingtoDB(building);
     }
 
-
     @CrossOrigin(origins = "*")
     @PostMapping("/floors")
     public String addFloor(@RequestBody Floor floor){
@@ -62,23 +62,53 @@ public class MainController {
         return roomService.saveRoomtoDB(room);
     }
 
-
     @CrossOrigin(origins = "*")
     @PostMapping("/clusters")
-    public String addCluster(@RequestBody Cluster cluster){ return clusterService.addClustertoDB(cluster); }
+    public String addCluster(@RequestBody Cluster cluster)
+    {
+        if (cluster.getId() == 0) {
+            ClientHttpRequestFactory requestFactory = new
+                    HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
+            RestTemplate restTemplate = new RestTemplate(requestFactory);
+            String url = "http://localhost:3005/clusters";
+            String result = restTemplate.postForObject(url, cluster, String.class);
+            return null;
+        } else {
+            return clusterService.addClustertoDB(cluster);
+        }
+    }
 
     @CrossOrigin(origins = "*")
     @PostMapping("/nodes")
-    public String addNode(@RequestBody Node node){
-        return nodeService.addNodetoDB(node);
+    public String addNode(@RequestBody Node node)
+    {
+        if(node.getId() == 0) {
+            ClientHttpRequestFactory requestFactory = new
+                    HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
+            RestTemplate restTemplate = new RestTemplate(requestFactory);
+            String url = "http://localhost:3005/clusters";
+            String result = restTemplate.postForObject(url, node, String.class);
+            return null;
+        } else {
+            return nodeService.addNodetoDB(node);
+        }
     }
 
     @CrossOrigin(origins = "*")
     @PostMapping("/sensors")
-    public String addSensor(@RequestBody Sensor sensor){
-        return sensorService.addSensortoDB(sensor);
+    public String addSensor(@RequestBody Sensor sensor)
+    {
+        if(sensor.getId() == 0) {
+            ClientHttpRequestFactory requestFactory = new
+                    HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
+            RestTemplate restTemplate = new RestTemplate(requestFactory);
+            String url = "http://localhost:3005/clusters";
+            String result = restTemplate.postForObject(url, sensor, String.class);
+            return null;
+        } else {
+            return sensorService.addSensortoDB(sensor);
+        }
     }
-
 
     /**
      *
@@ -89,7 +119,7 @@ public class MainController {
     public Iterable<Building> searchBuildingByLa(
             @RequestParam final String latitude,
             @RequestParam final String longitude,
-            @RequestParam(required = false) Integer radius){
+            @RequestParam(required = false) Integer radius) {
         return buildingService.searchBuildingByLa(latitude,longitude,radius);
     }
     public Iterable<Building> searchBuildingByCity(
@@ -130,33 +160,57 @@ public class MainController {
     }
 
     @CrossOrigin(origins = "*")
-    @DeleteMapping(value = "cluster_id")
+    @DeleteMapping(value = "/clusters/{cluster_id}")
     public void deleteCluster(
-            @PathVariable("cluster_id") final long cluster_id)
+            @PathVariable("cluster_id") final long cluster_id,
+            @RequestParam(value = "from", required = false) final String source)
     {
         clusterService.deleteCluster(cluster_id);
+        if (source == null) {
+            ClientHttpRequestFactory requestFactory = new
+                    HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
+            RestTemplate restTemplate = new RestTemplate(requestFactory);
+            String url = "http://localhost:3005/clusters/" + cluster_id;
+            restTemplate.delete(url);
+        }
     }
 
     @CrossOrigin(origins = "*")
-    @DeleteMapping(value = "node_id")
+    @DeleteMapping(value = "/nodes/{node_id}")
     public void deleteNode(
-            @PathVariable("node_id") final long node_id)
+            @PathVariable("node_id") final long node_id,
+            @RequestParam(value = "from", required = false) final String source
+    )
     {
         nodeService.deleteNode(node_id);
+        if (source == null) {
+            ClientHttpRequestFactory requestFactory = new
+                    HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
+            RestTemplate restTemplate = new RestTemplate(requestFactory);
+            String url = "http://localhost:3005/nodes/"+node_id;
+            restTemplate.delete(url);
+        }
     }
 
     @CrossOrigin(origins = "*")
-    @DeleteMapping(value = "sensor_id")
+    @DeleteMapping(value = "/sensors/{sensor_id}")
     public void deleteSensor(
-            @PathVariable("sensor_id") final long sensor_id)
+            @PathVariable("sensor_id") final long sensor_id,
+            @RequestParam(value = "from", required = false) final String source)
     {
         sensorService.deleteSensor(sensor_id);
+        if (source == null) {
+            ClientHttpRequestFactory requestFactory = new
+                    HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
+            RestTemplate restTemplate = new RestTemplate(requestFactory);
+            String url = "http://localhost:3005/sensors/" + sensor_id;
+            restTemplate.delete(url);
+        }
     }
 
     /**
      * fetch_nested
      */
-
     @CrossOrigin(origins = "*")
     @GetMapping("/buildings/{building_id}")
     public String getBuildingByBuildingId(
@@ -164,7 +218,6 @@ public class MainController {
             Model model,
             @RequestParam(value = "fetch_nested", required = false) final String nestedContent)
     {
-
         buildingNested buildingNest = buildingService.getBuildingNestedByBuildingId(building_id,"floor,cluster");
         Map<Integer,Boolean> matchedRes = buildingService.getFloorCluterMatchResult(buildingNest);
         model.addAttribute("matchedRes", matchedRes);
@@ -209,7 +262,6 @@ public class MainController {
             return roomService.getRoomNestedByRoomId(room_id,nestedContent).toString();
 
     }
-
 
     @CrossOrigin(origins = "*")
     @GetMapping("/clusters/{cluster_id}")
