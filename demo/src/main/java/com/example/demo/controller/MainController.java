@@ -286,4 +286,46 @@ public class MainController {
         else
             return nodeService.getNodeNestedByNodeId(node_id,nestedContent).toString();
     }
+    /**
+     * Statistics
+     */
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/buildings/statistics/{building_id}")
+    public HashMap<String, Object> getBuildingStats(@PathVariable final long building_id)
+    {
+        List<Object[]> a = buildingService.countBuildingClustersAndNodes(building_id);
+        HashMap<String, Object> hmap = new HashMap<String, Object>();
+        Object[] count = a.get(0);
+        hmap.put("cluster_count", count[0]);
+        hmap.put("node_count", count[1]);
+        hmap.put("sensor_count", count[2]);
+        return hmap;
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/floors/statistics/{floor_id}")
+    public HashMap<String, Object> getFloorStats(@PathVariable final long floor_id)
+    {
+        List<Object[]> a = floorService.countFloorRoomNodeSensor(floor_id);
+        HashMap<String, Object> hmap = new HashMap<String, Object>();
+        Object[] count = a.get(0);
+        hmap.put("room_count", count[0]);
+        hmap.put("node_count", count[1]);
+        hmap.put("sensor_count", count[2]);
+        return hmap;
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/rooms/statistics/{room_id}")
+    public HashMap<String, Object> getRoomStats(@PathVariable final long room_id)
+    {
+        List<Object[]> a = roomService.countNodeSensor(room_id);
+        HashMap<String, Object> hmap = new HashMap<String, Object>();
+        Object[] count = a.get(0);
+        hmap.put("node_count", count[0]);
+        hmap.put("sensor_count", count[1]);
+        return hmap;
+    }
+
 }

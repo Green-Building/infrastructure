@@ -47,4 +47,9 @@ public class roomService {
         return roomNest;
     }
 
+    public List<Object[]> countNodeSensor(long room_id) {
+        return roomRepository.countNodeSensor(room_id);
+    }
+
+
 }

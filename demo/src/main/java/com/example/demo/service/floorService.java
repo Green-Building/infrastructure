@@ -80,4 +80,9 @@ public class floorService {
         return res;
     }
 
+    public List<Object[]> countFloorRoomNodeSensor(long floor_id) {
+        return floorRepository.countFloorRoomNodeSensor(floor_id);
+    }
+
+
 }
