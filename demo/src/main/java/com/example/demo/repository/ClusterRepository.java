@@ -14,7 +14,13 @@ import java.util.List;
 public interface ClusterRepository extends CrudRepository<Cluster, Long> {
 
     @Transactional
+    @Query("select cluster from Cluster cluster where cluster.floor_id = :floor_id")
+    Cluster findClusterByFloorID(@Param("floor_id") long floor_id);
+
+    @Transactional
     @Query("select cluster from Cluster cluster where cluster.building_id = :building_id")
     List<Cluster> findClusterByBuildingId(@Param("building_id") long building_id);
+
+
 
 }

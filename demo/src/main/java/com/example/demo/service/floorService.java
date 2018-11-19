@@ -52,6 +52,8 @@ public class floorService {
         Long floorId = Long.valueOf(floor_id).longValue();
         Floor floor = floorRepository.findFloorByFloorID(floorId);
 
+        Cluster cluster = clusterRepository.findClusterByFloorID(floorId);
+
         List<Room> roomList = roomRepository.findRoomByFloorId(floorId);
         List<Node> nodeList = new LinkedList<>();
 
@@ -59,7 +61,16 @@ public class floorService {
             nodeList.add(nodeRepository.findNodeByRoomId(room.getId()));
         }
 
-        floorNested floorNest = new floorNested(floor,roomList,nodeList);
+        List<Sensor> sensorList = new LinkedList<>();
+
+        Iterable<Sensor> sensors = sensorRepository.findAll();
+        for(Sensor sensor: sensors) {
+            if(sensor.getCluster_id() == cluster.getId()){
+                sensorList.add(sensor);
+            }
+        }
+
+        floorNested floorNest = new floorNested(floor,cluster,roomList,nodeList,sensorList);
         return floorNest;
     }
 
