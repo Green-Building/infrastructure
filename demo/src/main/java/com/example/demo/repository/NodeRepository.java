@@ -18,14 +18,9 @@ public interface NodeRepository extends CrudRepository <Node, Long> {
     @Query("delete from Node node where node.cluster_id = :cluster_id")
     void deleteNodeByClusterId(@Param("cluster_id")long cluster_id);
 
-
     @Transactional
     @Query("select node from Node node where node.room_id = :room_id")
-    Node findNodeByRoomId1(@Param("room_id") long room_id);
-
-    @Transactional
-    @Query("select node from Node node where node.room_id = :room_id")
-    List<Node> findNodeByRoomId(@Param("room_id") long room_id);
+    Node findNodeByRoomId(@Param("room_id") long room_id);
 
     @Transactional
     @Query("select node from Node node where node.cluster_id = :cluster_id")

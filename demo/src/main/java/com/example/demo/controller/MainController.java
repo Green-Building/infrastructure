@@ -131,6 +131,8 @@ public class MainController {
     }
 
 
+
+
     /**
      * delete
      */
@@ -232,18 +234,11 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/floors/{floor_id}")
-    public String getFloorByFloorId(
+    public @ResponseBody String getFloorByFloorId(
             @PathVariable final long floor_id,
             Model model,
             @RequestParam(value = "fetch_nested", required = false) final String nestedContent)
     {
-        floorNested floorNest = floorService.getFloorNestedByFloorId(floor_id,"room,node");
-
-        Map<Integer,Boolean> matchedRes = floorService.getRoomNodeMatchResult(floorNest);
-        model.addAttribute("matchedRes", matchedRes);
-        Node node = new Node();
-        model.addAttribute("node",node);
-
         if(nestedContent==null)
             return floorService.getFloorByFloorId(floor_id).toString();
         else

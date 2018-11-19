@@ -11,7 +11,11 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 @Repository
-public interface FloorRepository extends CrudRepository<Floor, Long>{
+public interface FloorRepository extends CrudRepository<Floor, Long> {
+    @Transactional
+    @Query("select floor from Floor floor where floor.id = :floor_id")
+    Floor findFloorByFloorID(@Param("floor_id") long floor_id);
+
 
     @Transactional
     @Modifying

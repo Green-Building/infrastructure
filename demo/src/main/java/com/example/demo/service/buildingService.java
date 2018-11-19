@@ -114,5 +114,4 @@ public class buildingService {
         }
         return res;
     }
-
 }
