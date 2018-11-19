@@ -45,8 +45,10 @@ public class MainController {
      */
     @CrossOrigin(origins = "*")
     @PostMapping("/buildings")
-    public String addBuilding(@RequestBody Building building){
-        return buildingService.saveBuildingtoDB(building);
+    public @ResponseBody
+    String addBuilding(@RequestBody Building building)
+    {
+        return buildingService.saveBuildingToDB(building);
     }
 
     @CrossOrigin(origins = "*")
@@ -210,7 +212,7 @@ public class MainController {
      */
     @CrossOrigin(origins = "*")
     @GetMapping("/buildings/{building_id}")
-    public String getBuildingByBuildingId(
+    public @ResponseBody String getBuildingByBuildingId(
             @PathVariable final long building_id,
             Model model,
             @RequestParam(value = "fetch_nested", required = false) final String nestedContent)
@@ -221,7 +223,7 @@ public class MainController {
         Cluster cluster = new Cluster();
         model.addAttribute("cluster",cluster);
 
-        if(nestedContent==null)
+        if(nestedContent == null)
             return buildingService.getBuildingByBuildingId(building_id).toString();
         else
             return buildingService.getBuildingNestedByBuildingId(building_id,nestedContent).toString();
