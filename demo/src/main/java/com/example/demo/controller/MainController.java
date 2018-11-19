@@ -130,8 +130,15 @@ public class MainController {
         return buildingService.searchBuildingByCity(city,state,zipcode);
     }
 
-
-
+    @CrossOrigin(origins = "*")
+    @GetMapping("/buildings/search/location")
+    public @ResponseBody
+    Iterable<Building> searchBuidlingByLocation(@RequestParam(required = false) final String city,
+                                                @RequestParam(required = false) final String state,
+                                                @RequestParam(required = false) final String zipcode)
+    {
+        return buildingService.searchBuildingByCity(city,state,zipcode);
+    }
 
     /**
      * delete
@@ -296,6 +303,13 @@ public class MainController {
             return nodeService.getNodeByNodeId(node_id).toString();
         else
             return nodeService.getNodeNestedByNodeId(node_id,nestedContent).toString();
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("sensors/{sensor_id}")
+    public String getSensorBySensorId(@PathVariable final String sensor_id)
+    {
+        return sensorService.findSensorBySensorId(sensor_id);
     }
 
     @CrossOrigin(origins = "*")

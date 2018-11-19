@@ -10,6 +10,12 @@ public class sensorService {
     @Autowired
     private SensorRepository sensorRepository;
 
+    public String findSensorBySensorId(String sensorId)
+    {
+        long sensor_id = Long.valueOf(sensorId).longValue();
+        return sensorRepository.findById(sensor_id).get().toString();
+    }
+
     public Sensor updateSensorBySensorId(String sensorID, Sensor sensor)
     {
         long sensor_id = Long.valueOf(sensorID).longValue();
