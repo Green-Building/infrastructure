@@ -40,10 +40,9 @@ public class MainController {
 
 
     /**
-     *
-     * Add
+     * Add building, floor, room;
+     * Add cluster, node, sensor;
      */
-
     @CrossOrigin(origins = "*")
     @PostMapping("/buildings")
     public String addBuilding(@RequestBody Building building){
@@ -111,7 +110,6 @@ public class MainController {
     }
 
     /**
-     *
      * search geocode
      */
     @CrossOrigin(origins = "*")
@@ -134,7 +132,6 @@ public class MainController {
     /**
      * delete
      */
-
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "building_id")
     public void deleteBuilding(
@@ -230,6 +227,7 @@ public class MainController {
             return buildingService.getBuildingNestedByBuildingId(building_id,nestedContent).toString();
     }
 
+
     @CrossOrigin(origins = "*")
     @GetMapping("/floors/{floor_id}")
     public String getFloorByFloorId(
@@ -276,6 +274,22 @@ public class MainController {
     }
 
     @CrossOrigin(origins = "*")
+    @GetMapping("/clusters/{cluster_id}/sensors")
+    public @ResponseBody List<Long> getSensorIDByClusterId(
+            @PathVariable final String cluster_id)
+    {
+        return clusterService.getSensorIDByClusterID(cluster_id);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/nodes/{node_id}/sensors")
+    public @ResponseBody List<Long> getSensorIDByNodeId(
+            @PathVariable final String node_id)
+    {
+        return nodeService.getSensorIDByNodeID(node_id);
+    }
+
+    @CrossOrigin(origins = "*")
     @GetMapping("/nodes/{node_id}")
     public String getNodeByNodeId(
             @PathVariable final long node_id,
@@ -285,5 +299,47 @@ public class MainController {
             return nodeService.getNodeByNodeId(node_id).toString();
         else
             return nodeService.getNodeNestedByNodeId(node_id,nestedContent).toString();
+    }
+
+    @CrossOrigin(origins = "*")
+    @PutMapping("/clusters/{cluster_id}")
+    public void updateClusterByClusterId(
+            @PathVariable final String cluster_id,
+            @RequestBody Cluster cluster)
+    {
+        Cluster clusterNew = clusterService.updateClusterByClusterID(cluster_id, cluster);
+        ClientHttpRequestFactory requestFactory = new
+                HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+        String url = "http://localhost:3005/clusters/" +cluster_id;
+        restTemplate.put(url, clusterNew);
+    }
+
+    @CrossOrigin(origins = "*")
+    @PutMapping("/nodes/{node_id}")
+    public void updateNodeByNodeId(
+            @PathVariable final String node_id,
+            @RequestBody Node node)
+    {
+        Node nodeNew = nodeService.updateNodeByNodeId(node_id, node);
+        ClientHttpRequestFactory requestFactory = new
+                HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+        String url = "http://localhost:3005/nodes/" +node_id;
+        restTemplate.put(url, nodeNew);
+    }
+
+    @CrossOrigin(origins = "*")
+    @PutMapping("/sensors/{sensor_id}")
+    public void updateSensorBySensorId(
+            @PathVariable final String sensor_id,
+            @RequestBody Sensor sensor)
+    {
+        Sensor sensorNew = sensorService.updateSensorBySensorId(sensor_id,sensor);
+        ClientHttpRequestFactory requestFactory = new
+                HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+        String url = "http://localhost:3005/sensors/" +sensor_id;
+        restTemplate.put(url, sensorNew);
     }
 }
