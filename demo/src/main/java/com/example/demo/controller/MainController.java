@@ -87,7 +87,7 @@ public class MainController {
             ClientHttpRequestFactory requestFactory = new
                     HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
             RestTemplate restTemplate = new RestTemplate(requestFactory);
-            String url = "http://localhost:3005/clusters";
+            String url = "http://localhost:3005/nodes";
             String result = restTemplate.postForObject(url, node, String.class);
             return null;
         } else {
@@ -103,7 +103,7 @@ public class MainController {
             ClientHttpRequestFactory requestFactory = new
                     HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
             RestTemplate restTemplate = new RestTemplate(requestFactory);
-            String url = "http://localhost:3005/clusters";
+            String url = "http://localhost:3005/sensors";
             String result = restTemplate.postForObject(url, sensor, String.class);
             return null;
         } else {
@@ -207,6 +207,7 @@ public class MainController {
             @RequestParam(value = "from", required = false) final String source)
     {
         sensorService.deleteSensor(sensor_id);
+
         if (source == null) {
             ClientHttpRequestFactory requestFactory = new
                     HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
