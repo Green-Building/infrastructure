@@ -75,11 +75,16 @@ public class nodeService {
     public nodeNested getNodeNestedByNodeId(long node_id,String requirement){
         Long nodeId = Long.valueOf(node_id).longValue();
         Node node = nodeRepository.findById(nodeId).get();
+        Iterable<Sensor> sensors = sensorRepository.findAll();
+        List<Sensor> sensorList = new LinkedList<>();
 
-        List<Sensor> sensorList = sensorRepository.findSensorByNodeId(nodeId);
+        for(Sensor sensor: sensors) {
+            if(sensor.getNode_id() == nodeId) {
+                sensorList.add(sensor);
+            }
+        }
 
         nodeNested nodeNest = new nodeNested(node,sensorList);
-
         return nodeNest;
     }
 
