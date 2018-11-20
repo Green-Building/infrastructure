@@ -75,7 +75,8 @@ public class MainController {
             String result = restTemplate.postForObject(url, cluster, String.class);
             return null;
         } else {
-            return clusterService.addClustertoDB(cluster);
+            clusterService.addClustertoDB(cluster);
+            return cluster.toString();
         }
     }
 
@@ -91,7 +92,8 @@ public class MainController {
             String result = restTemplate.postForObject(url, node, String.class);
             return null;
         } else {
-            return nodeService.addNodetoDB(node);
+            nodeService.addNodetoDB(node);
+            return node.toString();
         }
     }
 
@@ -107,7 +109,8 @@ public class MainController {
             String result = restTemplate.postForObject(url, sensor, String.class);
             return null;
         } else {
-            return sensorService.addSensortoDB(sensor);
+            sensorService.addSensortoDB(sensor);
+            return sensor.toString();
         }
     }
 
