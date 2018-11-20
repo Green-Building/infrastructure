@@ -73,7 +73,7 @@ public class MainController {
             RestTemplate restTemplate = new RestTemplate(requestFactory);
             String url = "http://localhost:3005/clusters";
             String result = restTemplate.postForObject(url, cluster, String.class);
-            return null;
+            return result;
         } else {
             clusterService.addClustertoDB(cluster);
             return cluster.toString();
@@ -90,7 +90,7 @@ public class MainController {
             RestTemplate restTemplate = new RestTemplate(requestFactory);
             String url = "http://localhost:3005/nodes";
             String result = restTemplate.postForObject(url, node, String.class);
-            return null;
+            return result;
         } else {
             nodeService.addNodetoDB(node);
             return node.toString();
@@ -107,7 +107,7 @@ public class MainController {
             RestTemplate restTemplate = new RestTemplate(requestFactory);
             String url = "http://localhost:3005/sensors";
             String result = restTemplate.postForObject(url, sensor, String.class);
-            return null;
+            return result;
         } else {
             sensorService.addSensortoDB(sensor);
             return sensor.toString();
