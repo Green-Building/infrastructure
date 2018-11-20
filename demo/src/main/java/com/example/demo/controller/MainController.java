@@ -6,6 +6,7 @@ import com.example.demo.service.*;
 import com.example.demo.repository.*;
 import com.example.demo.nested.*;
 import org.apache.http.impl.client.HttpClients;
+import org.hibernate.validator.constraints.pl.REGON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -45,27 +46,26 @@ public class MainController {
      */
     @CrossOrigin(origins = "*")
     @PostMapping("/buildings")
-    public @ResponseBody
-    String addBuilding(@RequestBody Building building)
+    public @ResponseBody String addBuilding(@RequestBody Building building)
     {
         return buildingService.saveBuildingToDB(building);
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/floors")
-    public String addFloor(@RequestBody Floor floor){
+    @PostMapping("/floors") public @ResponseBody String addFloor(@RequestBody Floor floor)
+    {
         return floorService.saveFloortoDB(floor);
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/rooms")
-    public String addRoom(@RequestBody Room room){
+    @PostMapping("/rooms") public @ResponseBody String addRoom(@RequestBody Room room)
+    {
         return roomService.saveRoomtoDB(room);
     }
 
     @CrossOrigin(origins = "*")
     @PostMapping("/clusters")
-    public String addCluster(@RequestBody Cluster cluster)
+    public @ResponseBody String addCluster(@RequestBody Cluster cluster)
     {
         if (cluster.getId() == 0) {
             ClientHttpRequestFactory requestFactory = new
@@ -81,7 +81,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/nodes")
-    public String addNode(@RequestBody Node node)
+    public @ResponseBody String addNode(@RequestBody Node node)
     {
         if(node.getId() == 0) {
             ClientHttpRequestFactory requestFactory = new
@@ -97,7 +97,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/sensors")
-    public String addSensor(@RequestBody Sensor sensor)
+    public @ResponseBody String addSensor(@RequestBody Sensor sensor)
     {
         if(sensor.getId() == 0) {
             ClientHttpRequestFactory requestFactory = new
@@ -116,13 +116,15 @@ public class MainController {
      */
     @CrossOrigin(origins = "*")
     @GetMapping("/buildings/search/geocode")
-    public Iterable<Building> searchBuildingByLa(
+    public @ResponseBody Iterable<Building> searchBuildingByLa(
             @RequestParam final String latitude,
             @RequestParam final String longitude,
-            @RequestParam(required = false) Integer radius) {
+            @RequestParam(required = false) Integer radius)
+    {
         return buildingService.searchBuildingByLa(latitude,longitude,radius);
     }
-    public Iterable<Building> searchBuildingByCity(
+
+    public @ResponseBody Iterable<Building> searchBuildingByCity(
             @RequestParam final String city,
             @RequestParam final String state,
             @RequestParam final String zipcode)
@@ -132,10 +134,10 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/buildings/search/location")
-    public @ResponseBody
-    Iterable<Building> searchBuidlingByLocation(@RequestParam(required = false) final String city,
-                                                @RequestParam(required = false) final String state,
-                                                @RequestParam(required = false) final String zipcode)
+    public @ResponseBody Iterable<Building> searchBuidlingByLocation(
+            @RequestParam(required = false) final String city,
+            @RequestParam(required = false) final String state,
+            @RequestParam(required = false) final String zipcode)
     {
         return buildingService.searchBuildingByCity(city,state,zipcode);
     }
@@ -145,7 +147,7 @@ public class MainController {
      */
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "building_id")
-    public void deleteBuilding(
+    public @ResponseBody void deleteBuilding(
             @PathVariable("building_id" ) final long building_id)
     {
         buildingService.deleteBuilding(building_id);
@@ -153,7 +155,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "floor_id")
-    public void deleteFloor(
+    public @ResponseBody void deleteFloor(
             @PathVariable("floor_id" ) final long floor_id)
     {
         floorService.deleteFloor(floor_id);
@@ -161,7 +163,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "room_id")
-    public void deleteRoom(
+    public @ResponseBody void deleteRoom(
             @PathVariable("room_id") final long room_id)
     {
         roomService.deleteRoom(room_id);
@@ -169,7 +171,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "/clusters/{cluster_id}")
-    public void deleteCluster(
+    public @ResponseBody void deleteCluster(
             @PathVariable("cluster_id") final long cluster_id,
             @RequestParam(value = "from", required = false) final String source)
     {
@@ -185,7 +187,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "/nodes/{node_id}")
-    public void deleteNode(
+    public @ResponseBody void deleteNode(
             @PathVariable("node_id") final long node_id,
             @RequestParam(value = "from", required = false) final String source
     )
@@ -202,7 +204,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "/sensors/{sensor_id}")
-    public void deleteSensor(
+    public @ResponseBody void deleteSensor(
             @PathVariable("sensor_id") final long sensor_id,
             @RequestParam(value = "from", required = false) final String source)
     {
@@ -255,7 +257,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/rooms/{room_id}")
-    public String getRoomByRoomId(
+    public @ResponseBody String getRoomByRoomId(
             @PathVariable final long room_id,
             @RequestParam(value = "fetch_nested",required = false) final String nestedContent)
     {
@@ -268,7 +270,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/clusters/{cluster_id}")
-    public String getClusterByClusterId(
+    public @ResponseBody String getClusterByClusterId(
             @PathVariable final long cluster_id,
             @RequestParam(value = "fetch_nested",required = false) final String nestedContent)
     {
@@ -296,7 +298,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/nodes/{node_id}")
-    public String getNodeByNodeId(
+    public @ResponseBody String getNodeByNodeId(
             @PathVariable final long node_id,
             @RequestParam(value = "fetch_nested",required = false) final String nestedContent)
     {
@@ -308,14 +310,14 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("sensors/{sensor_id}")
-    public String getSensorBySensorId(@PathVariable final String sensor_id)
+    public @ResponseBody String getSensorBySensorId(@PathVariable final String sensor_id)
     {
         return sensorService.findSensorBySensorId(sensor_id);
     }
 
     @CrossOrigin(origins = "*")
     @PutMapping("/clusters/{cluster_id}")
-    public void updateClusterByClusterId(
+    public @ResponseBody void updateClusterByClusterId(
             @PathVariable final String cluster_id,
             @RequestBody Cluster cluster)
     {
@@ -329,7 +331,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @PutMapping("/nodes/{node_id}")
-    public void updateNodeByNodeId(
+    public @ResponseBody void updateNodeByNodeId(
             @PathVariable final String node_id,
             @RequestBody Node node)
     {
@@ -343,7 +345,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @PutMapping("/sensors/{sensor_id}")
-    public void updateSensorBySensorId(
+    public @ResponseBody void updateSensorBySensorId(
             @PathVariable final String sensor_id,
             @RequestBody Sensor sensor)
     {
