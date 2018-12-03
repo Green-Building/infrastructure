@@ -10,6 +10,29 @@ public class sensorService {
     @Autowired
     private SensorRepository sensorRepository;
 
+    public String findSensorBySensorId(String sensorId)
+    {
+        long sensor_id = Long.valueOf(sensorId).longValue();
+        return sensorRepository.findById(sensor_id).get().toString();
+    }
+
+    public Sensor updateSensorBySensorId(String sensorID, Sensor sensor)
+    {
+        long sensor_id = Long.valueOf(sensorID).longValue();
+        Sensor sensorFromDB = sensorRepository.findById(sensor_id).get();
+
+        if(sensor.getName() != null) {
+            sensorFromDB.setName(sensor.getName());
+        }
+
+        if(sensor.getStatus() != null) {
+            sensorFromDB.setStatus(sensor.getStatus());
+        }
+
+        sensorRepository.save(sensorFromDB);
+        return sensorFromDB;
+    }
+
     public String addSensortoDB(Sensor sensor){
         sensorRepository.save(sensor);
         return sensor.toString();
@@ -19,9 +42,9 @@ public class sensorService {
         Long sensorId = Long.valueOf(sensor_id).longValue();
         Iterable<Sensor> sensors = sensorRepository.findAll();
         for(Sensor sensor: sensors){
-            if(sensorId == sensor.getId())
+            if(sensorId == sensor.getId()) {
                 sensorRepository.deleteById(sensorId);
+            }
         }
     }
-
 }

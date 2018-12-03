@@ -23,7 +23,7 @@ public class Building {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private long image_url;
+    private String image_url;
     private String address;
     private String city;
     private String state;
@@ -32,8 +32,7 @@ public class Building {
     private Double longitude;
     private Double latitude;
 
-
-    public long  getId() {
+    public long getId() {
         return id;
     }
 
@@ -41,11 +40,11 @@ public class Building {
         this.id = id;
     }
 
-    public long getImage_url() {
+    public String getImage_url() {
         return image_url;
     }
 
-    public void setImage_url(long image_url) {
+    public void setImage_url(String image_url) {
         this.image_url = image_url;
     }
 

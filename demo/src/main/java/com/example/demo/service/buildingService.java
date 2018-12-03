@@ -6,6 +6,7 @@ import com.example.demo.repository.*;
 import com.example.demo.model.*;
 import com.example.demo.nested.*;
 import java.util.*;
+
 @Service
 public class buildingService {
 
@@ -18,7 +19,7 @@ public class buildingService {
     @Autowired
     ClusterRepository clusterRepository;
 
-    public String saveBuildingtoDB(Building building){
+    public String saveBuildingToDB (Building building) {
         buildingRepository.save(building);
         return building.toString();
     }

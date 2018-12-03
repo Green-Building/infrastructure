@@ -6,6 +6,7 @@ import com.example.demo.service.*;
 import com.example.demo.repository.*;
 import com.example.demo.nested.*;
 import org.apache.http.impl.client.HttpClients;
+import org.hibernate.validator.constraints.pl.REGON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -40,31 +41,31 @@ public class MainController {
 
 
     /**
-     *
-     * Add
+     * Add building, floor, room;
+     * Add cluster, node, sensor;
      */
-
     @CrossOrigin(origins = "*")
     @PostMapping("/buildings")
-    public String addBuilding(@RequestBody Building building){
-        return buildingService.saveBuildingtoDB(building);
+    public @ResponseBody String addBuilding(@RequestBody Building building)
+    {
+        return buildingService.saveBuildingToDB(building);
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/floors")
-    public String addFloor(@RequestBody Floor floor){
+    @PostMapping("/floors") public @ResponseBody String addFloor(@RequestBody Floor floor)
+    {
         return floorService.saveFloortoDB(floor);
     }
 
     @CrossOrigin(origins = "*")
-    @PostMapping("/rooms")
-    public String addRoom(@RequestBody Room room){
+    @PostMapping("/rooms") public @ResponseBody String addRoom(@RequestBody Room room)
+    {
         return roomService.saveRoomtoDB(room);
     }
 
     @CrossOrigin(origins = "*")
     @PostMapping("/clusters")
-    public String addCluster(@RequestBody Cluster cluster)
+    public @ResponseBody String addCluster(@RequestBody Cluster cluster)
     {
         if (cluster.getId() == 0) {
             ClientHttpRequestFactory requestFactory = new
@@ -72,57 +73,61 @@ public class MainController {
             RestTemplate restTemplate = new RestTemplate(requestFactory);
             String url = "http://localhost:3005/clusters";
             String result = restTemplate.postForObject(url, cluster, String.class);
-            return null;
+            return result;
         } else {
-            return clusterService.addClustertoDB(cluster);
+            clusterService.addClustertoDB(cluster);
+            return cluster.toString();
         }
     }
 
     @CrossOrigin(origins = "*")
     @PostMapping("/nodes")
-    public String addNode(@RequestBody Node node)
+    public @ResponseBody String addNode(@RequestBody Node node)
     {
         if(node.getId() == 0) {
             ClientHttpRequestFactory requestFactory = new
                     HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
             RestTemplate restTemplate = new RestTemplate(requestFactory);
-            String url = "http://localhost:3005/clusters";
+            String url = "http://localhost:3005/nodes";
             String result = restTemplate.postForObject(url, node, String.class);
-            return null;
+            return result;
         } else {
-            return nodeService.addNodetoDB(node);
+            nodeService.addNodetoDB(node);
+            return node.toString();
         }
     }
 
     @CrossOrigin(origins = "*")
     @PostMapping("/sensors")
-    public String addSensor(@RequestBody Sensor sensor)
+    public @ResponseBody String addSensor(@RequestBody Sensor sensor)
     {
         if(sensor.getId() == 0) {
             ClientHttpRequestFactory requestFactory = new
                     HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
             RestTemplate restTemplate = new RestTemplate(requestFactory);
-            String url = "http://localhost:3005/clusters";
+            String url = "http://localhost:3005/sensors";
             String result = restTemplate.postForObject(url, sensor, String.class);
-            return null;
+            return result;
         } else {
-            return sensorService.addSensortoDB(sensor);
+            sensorService.addSensortoDB(sensor);
+            return sensor.toString();
         }
     }
 
     /**
-     *
      * search geocode
      */
     @CrossOrigin(origins = "*")
     @GetMapping("/buildings/search/geocode")
-    public Iterable<Building> searchBuildingByLa(
+    public @ResponseBody Iterable<Building> searchBuildingByLa(
             @RequestParam final String latitude,
             @RequestParam final String longitude,
-            @RequestParam(required = false) Integer radius) {
+            @RequestParam(required = false) Integer radius)
+    {
         return buildingService.searchBuildingByLa(latitude,longitude,radius);
     }
-    public Iterable<Building> searchBuildingByCity(
+
+    public @ResponseBody Iterable<Building> searchBuildingByCity(
             @RequestParam final String city,
             @RequestParam final String state,
             @RequestParam final String zipcode)
@@ -130,14 +135,22 @@ public class MainController {
         return buildingService.searchBuildingByCity(city,state,zipcode);
     }
 
+    @CrossOrigin(origins = "*")
+    @GetMapping("/buildings/search/location")
+    public @ResponseBody Iterable<Building> searchBuidlingByLocation(
+            @RequestParam(required = false) final String city,
+            @RequestParam(required = false) final String state,
+            @RequestParam(required = false) final String zipcode)
+    {
+        return buildingService.searchBuildingByCity(city,state,zipcode);
+    }
 
     /**
      * delete
      */
-
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "building_id")
-    public void deleteBuilding(
+    public @ResponseBody void deleteBuilding(
             @PathVariable("building_id" ) final long building_id)
     {
         buildingService.deleteBuilding(building_id);
@@ -145,7 +158,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "floor_id")
-    public void deleteFloor(
+    public @ResponseBody void deleteFloor(
             @PathVariable("floor_id" ) final long floor_id)
     {
         floorService.deleteFloor(floor_id);
@@ -153,7 +166,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "room_id")
-    public void deleteRoom(
+    public @ResponseBody void deleteRoom(
             @PathVariable("room_id") final long room_id)
     {
         roomService.deleteRoom(room_id);
@@ -161,7 +174,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "/clusters/{cluster_id}")
-    public void deleteCluster(
+    public @ResponseBody void deleteCluster(
             @PathVariable("cluster_id") final long cluster_id,
             @RequestParam(value = "from", required = false) final String source)
     {
@@ -177,7 +190,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "/nodes/{node_id}")
-    public void deleteNode(
+    public @ResponseBody void deleteNode(
             @PathVariable("node_id") final long node_id,
             @RequestParam(value = "from", required = false) final String source
     )
@@ -194,11 +207,12 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @DeleteMapping(value = "/sensors/{sensor_id}")
-    public void deleteSensor(
+    public @ResponseBody void deleteSensor(
             @PathVariable("sensor_id") final long sensor_id,
             @RequestParam(value = "from", required = false) final String source)
     {
         sensorService.deleteSensor(sensor_id);
+
         if (source == null) {
             ClientHttpRequestFactory requestFactory = new
                     HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
@@ -213,7 +227,7 @@ public class MainController {
      */
     @CrossOrigin(origins = "*")
     @GetMapping("/buildings/{building_id}")
-    public String getBuildingByBuildingId(
+    public @ResponseBody String getBuildingByBuildingId(
             @PathVariable final long building_id,
             Model model,
             @RequestParam(value = "fetch_nested", required = false) final String nestedContent)
@@ -224,26 +238,20 @@ public class MainController {
         Cluster cluster = new Cluster();
         model.addAttribute("cluster",cluster);
 
-        if(nestedContent==null)
+        if(nestedContent == null)
             return buildingService.getBuildingByBuildingId(building_id).toString();
         else
             return buildingService.getBuildingNestedByBuildingId(building_id,nestedContent).toString();
     }
 
+
     @CrossOrigin(origins = "*")
     @GetMapping("/floors/{floor_id}")
-    public String getFloorByFloorId(
+    public @ResponseBody String getFloorByFloorId(
             @PathVariable final long floor_id,
             Model model,
             @RequestParam(value = "fetch_nested", required = false) final String nestedContent)
     {
-        floorNested floorNest = floorService.getFloorNestedByFloorId(floor_id,"room,node");
-
-        Map<Integer,Boolean> matchedRes = floorService.getRoomNodeMatchResult(floorNest);
-        model.addAttribute("matchedRes", matchedRes);
-        Node node = new Node();
-        model.addAttribute("node",node);
-
         if(nestedContent==null)
             return floorService.getFloorByFloorId(floor_id).toString();
         else
@@ -252,7 +260,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/rooms/{room_id}")
-    public String getRoomByRoomId(
+    public @ResponseBody String getRoomByRoomId(
             @PathVariable final long room_id,
             @RequestParam(value = "fetch_nested",required = false) final String nestedContent)
     {
@@ -265,7 +273,7 @@ public class MainController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/clusters/{cluster_id}")
-    public String getClusterByClusterId(
+    public @ResponseBody String getClusterByClusterId(
             @PathVariable final long cluster_id,
             @RequestParam(value = "fetch_nested",required = false) final String nestedContent)
     {
@@ -276,8 +284,24 @@ public class MainController {
     }
 
     @CrossOrigin(origins = "*")
+    @GetMapping("/clusters/{cluster_id}/sensors")
+    public @ResponseBody List<Long> getSensorIDByClusterId(
+            @PathVariable final String cluster_id)
+    {
+        return clusterService.getSensorIDByClusterID(cluster_id);
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/nodes/{node_id}/sensors")
+    public @ResponseBody List<Long> getSensorIDByNodeId(
+            @PathVariable final String node_id)
+    {
+        return nodeService.getSensorIDByNodeID(node_id);
+    }
+
+    @CrossOrigin(origins = "*")
     @GetMapping("/nodes/{node_id}")
-    public String getNodeByNodeId(
+    public @ResponseBody String getNodeByNodeId(
             @PathVariable final long node_id,
             @RequestParam(value = "fetch_nested",required = false) final String nestedContent)
     {
@@ -328,4 +352,52 @@ public class MainController {
         return hmap;
     }
 
+    @CrossOrigin(origins = "*")
+    @GetMapping("sensors/{sensor_id}")
+    public @ResponseBody String getSensorBySensorId(@PathVariable final String sensor_id)
+    {
+        return sensorService.findSensorBySensorId(sensor_id);
+    }
+
+    @CrossOrigin(origins = "*")
+    @PutMapping("/clusters/{cluster_id}")
+    public @ResponseBody void updateClusterByClusterId(
+            @PathVariable final String cluster_id,
+            @RequestBody Cluster cluster)
+    {
+        Cluster clusterNew = clusterService.updateClusterByClusterID(cluster_id, cluster);
+        ClientHttpRequestFactory requestFactory = new
+                HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+        String url = "http://localhost:3005/clusters/" +cluster_id;
+        restTemplate.put(url, clusterNew);
+    }
+
+    @CrossOrigin(origins = "*")
+    @PutMapping("/nodes/{node_id}")
+    public @ResponseBody void updateNodeByNodeId(
+            @PathVariable final String node_id,
+            @RequestBody Node node)
+    {
+        Node nodeNew = nodeService.updateNodeByNodeId(node_id, node);
+        ClientHttpRequestFactory requestFactory = new
+                HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+        String url = "http://localhost:3005/nodes/" +node_id;
+        restTemplate.put(url, nodeNew);
+    }
+
+    @CrossOrigin(origins = "*")
+    @PutMapping("/sensors/{sensor_id}")
+    public @ResponseBody void updateSensorBySensorId(
+            @PathVariable final String sensor_id,
+            @RequestBody Sensor sensor)
+    {
+        Sensor sensorNew = sensorService.updateSensorBySensorId(sensor_id,sensor);
+        ClientHttpRequestFactory requestFactory = new
+                HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
+        RestTemplate restTemplate = new RestTemplate(requestFactory);
+        String url = "http://localhost:3005/sensors/" +sensor_id;
+        restTemplate.put(url, sensorNew);
+    }
 }

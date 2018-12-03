@@ -7,7 +7,7 @@ import java.util.List;
 
 public class buildingNested {
     private long id;
-    private long image_url;
+    private String image_url;
     private String address;
     private String city;
     private String state;
@@ -41,11 +41,11 @@ public class buildingNested {
         this.id = id;
     }
 
-    public long getImage_url() {
+    public String getImage_url() {
         return image_url;
     }
 
-    public void setImage_url(long image_url) {
+    public void setImage_url(String image_url) {
         this.image_url = image_url;
     }
 

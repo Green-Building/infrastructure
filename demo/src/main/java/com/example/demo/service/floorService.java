@@ -8,14 +8,12 @@ import com.example.demo.nested.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class floorService {
-
-    @Autowired
-    private FloorRepository floorRepository;
     @Autowired
     private ClusterRepository clusterRepository;
     @Autowired
@@ -24,6 +22,8 @@ public class floorService {
     private SensorRepository sensorRepository;
     @Autowired
     private RoomRepository roomRepository;
+    @Autowired
+    private FloorRepository floorRepository;
 
     public String saveFloortoDB(Floor floor) {
         floorRepository.save(floor);
@@ -50,14 +50,27 @@ public class floorService {
 
     public floorNested getFloorNestedByFloorId(long floor_id, String requirement){
         Long floorId = Long.valueOf(floor_id).longValue();
-        Floor floor = floorRepository.findById(floorId).get();
-        Room room = roomRepository.findById(floorId).get();
+        Floor floor = floorRepository.findFloorByFloorID(floorId);
+
+        Cluster cluster = clusterRepository.findClusterByFloorID(floorId);
 
         List<Room> roomList = roomRepository.findRoomByFloorId(floorId);
-        List<Node> nodeList = nodeRepository.findNodeByRoomId(room.getId());
+        List<Node> nodeList = new LinkedList<>();
 
-        floorNested floorNest = new floorNested(floor,roomList,nodeList);
+        for(Room room: roomList) {
+            nodeList.add(nodeRepository.findNodeByRoomId(room.getId()));
+        }
 
+        List<Sensor> sensorList = new LinkedList<>();
+
+        Iterable<Sensor> sensors = sensorRepository.findAll();
+        for(Sensor sensor: sensors) {
+            if(sensor.getCluster_id() == cluster.getId()){
+                sensorList.add(sensor);
+            }
+        }
+
+        floorNested floorNest = new floorNested(floor,cluster,roomList,nodeList,sensorList);
         return floorNest;
     }
 

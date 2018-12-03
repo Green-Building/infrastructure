@@ -100,4 +100,16 @@ public class nodeNested {
     public void setSensors(List<Sensor> sensors) {
         this.sensors = sensors;
     }
+
+    @Override
+    public String toString() {
+        ObjectMapper mapper = new ObjectMapper();
+        String json = "";
+        try {
+            json = mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
 }

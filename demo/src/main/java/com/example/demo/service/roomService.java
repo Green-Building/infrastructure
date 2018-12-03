@@ -39,7 +39,7 @@ public class roomService {
     public roomNested getRoomNestedByRoomId(long room_id, String requirement){
         Long roomId = Long.valueOf(room_id).longValue();
         Room room = roomRepository.findById(roomId).get();
-        Node node = nodeRepository.findNodeByRoomId1(room.getId());
+        Node node = nodeRepository.findNodeByRoomId(room.getId());
 
         List<Sensor> sensors = sensorRepository.findSensorByNodeId(node.getId());
         roomNested roomNest = new roomNested(room,node,sensors);
