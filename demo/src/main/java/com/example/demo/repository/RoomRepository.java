@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-
 import java.util.List;
 
 @Repository
@@ -25,5 +24,10 @@ public interface RoomRepository extends CrudRepository<Room, Long> {
     @Transactional
     @Query("select room from Room room where room.floor_id = :floor_id")
     List<Room> findRoomByFloorId(@Param("floor_id") long floor_id);
+
+    @Transactional
+    @Query(value="SELECT count(DISTINCT n.id),count(DISTINCT s.id) FROM room r INNER JOIN node n ON r.id = n.room_id LEFT JOIN sensor s ON n.id=s.node_id WHERE r.id = :room_id", nativeQuery = true)
+    List<Object[]> countNodeSensor(@Param("room_id") long room_id);
+
 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import org.springframework.ui.Model;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 @RestController
 public class MainController {
@@ -39,6 +40,10 @@ public class MainController {
     @Autowired
     private SensorRepository sensorRepository;
 
+    @Value("${config.data.simulator.ip}")
+    private String SIMULATOR_SEVER_IP;
+    @Value("${config.data.simulator.port}")
+    private String SIMULATOR_PORT;
 
     /**
      * Add building, floor, room;
@@ -71,7 +76,7 @@ public class MainController {
             ClientHttpRequestFactory requestFactory = new
                     HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
             RestTemplate restTemplate = new RestTemplate(requestFactory);
-            String url = "http://localhost:3005/clusters";
+            String url = "http://"+ SIMULATOR_SEVER_IP+ ":" +SIMULATOR_PORT+"/clusters";
             String result = restTemplate.postForObject(url, cluster, String.class);
             return result;
         } else {
@@ -88,7 +93,7 @@ public class MainController {
             ClientHttpRequestFactory requestFactory = new
                     HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
             RestTemplate restTemplate = new RestTemplate(requestFactory);
-            String url = "http://localhost:3005/nodes";
+            String url = "http://"+ SIMULATOR_SEVER_IP+ ":" +SIMULATOR_PORT+"/nodes";
             String result = restTemplate.postForObject(url, node, String.class);
             return result;
         } else {
@@ -105,7 +110,7 @@ public class MainController {
             ClientHttpRequestFactory requestFactory = new
                     HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
             RestTemplate restTemplate = new RestTemplate(requestFactory);
-            String url = "http://localhost:3005/sensors";
+            String url = "http://"+ SIMULATOR_SEVER_IP+ ":" +SIMULATOR_PORT+"/sensors";
             String result = restTemplate.postForObject(url, sensor, String.class);
             return result;
         } else {
@@ -183,7 +188,7 @@ public class MainController {
             ClientHttpRequestFactory requestFactory = new
                     HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
             RestTemplate restTemplate = new RestTemplate(requestFactory);
-            String url = "http://localhost:3005/clusters/" + cluster_id;
+            String url = "http://"+ SIMULATOR_SEVER_IP+ ":" +SIMULATOR_PORT+"/clusters/" + cluster_id;
             restTemplate.delete(url);
         }
     }
@@ -200,7 +205,7 @@ public class MainController {
             ClientHttpRequestFactory requestFactory = new
                     HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
             RestTemplate restTemplate = new RestTemplate(requestFactory);
-            String url = "http://localhost:3005/nodes/"+node_id;
+            String url = "http://"+ SIMULATOR_SEVER_IP+ ":" +SIMULATOR_PORT+"/nodes/"+node_id;
             restTemplate.delete(url);
         }
     }
@@ -217,7 +222,7 @@ public class MainController {
             ClientHttpRequestFactory requestFactory = new
                     HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
             RestTemplate restTemplate = new RestTemplate(requestFactory);
-            String url = "http://localhost:3005/sensors/" + sensor_id;
+            String url = "http://"+ SIMULATOR_SEVER_IP+ ":" +SIMULATOR_PORT+"/sensors/" + sensor_id;
             restTemplate.delete(url);
         }
     }
@@ -310,6 +315,47 @@ public class MainController {
         else
             return nodeService.getNodeNestedByNodeId(node_id,nestedContent).toString();
     }
+    /**
+     * Statistics
+     */
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/buildings/statistics/{building_id}")
+    public HashMap<String, Object> getBuildingStats(@PathVariable final long building_id)
+    {
+        List<Object[]> a = buildingService.countBuildingClustersAndNodes(building_id);
+        HashMap<String, Object> hmap = new HashMap<String, Object>();
+        Object[] count = a.get(0);
+        hmap.put("cluster_count", count[0]);
+        hmap.put("node_count", count[1]);
+        hmap.put("sensor_count", count[2]);
+        return hmap;
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/floors/statistics/{floor_id}")
+    public HashMap<String, Object> getFloorStats(@PathVariable final long floor_id)
+    {
+        List<Object[]> a = floorService.countFloorRoomNodeSensor(floor_id);
+        HashMap<String, Object> hmap = new HashMap<String, Object>();
+        Object[] count = a.get(0);
+        hmap.put("room_count", count[0]);
+        hmap.put("node_count", count[1]);
+        hmap.put("sensor_count", count[2]);
+        return hmap;
+    }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/rooms/statistics/{room_id}")
+    public HashMap<String, Object> getRoomStats(@PathVariable final long room_id)
+    {
+        List<Object[]> a = roomService.countNodeSensor(room_id);
+        HashMap<String, Object> hmap = new HashMap<String, Object>();
+        Object[] count = a.get(0);
+        hmap.put("node_count", count[0]);
+        hmap.put("sensor_count", count[1]);
+        return hmap;
+    }
 
     @CrossOrigin(origins = "*")
     @GetMapping("sensors/{sensor_id}")
@@ -328,7 +374,7 @@ public class MainController {
         ClientHttpRequestFactory requestFactory = new
                 HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
         RestTemplate restTemplate = new RestTemplate(requestFactory);
-        String url = "http://localhost:3005/clusters/" +cluster_id;
+        String url = "http://"+ SIMULATOR_SEVER_IP+ ":" +SIMULATOR_PORT+"/clusters/" +cluster_id;
         restTemplate.put(url, clusterNew);
     }
 
@@ -342,7 +388,7 @@ public class MainController {
         ClientHttpRequestFactory requestFactory = new
                 HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
         RestTemplate restTemplate = new RestTemplate(requestFactory);
-        String url = "http://localhost:3005/nodes/" +node_id;
+        String url = "http://"+ SIMULATOR_SEVER_IP+ ":" +SIMULATOR_PORT+"/nodes/" +node_id;
         restTemplate.put(url, nodeNew);
     }
 
@@ -356,7 +402,7 @@ public class MainController {
         ClientHttpRequestFactory requestFactory = new
                 HttpComponentsClientHttpRequestFactory(HttpClients.createDefault());
         RestTemplate restTemplate = new RestTemplate(requestFactory);
-        String url = "http://localhost:3005/sensors/" +sensor_id;
+        String url = "http://"+ SIMULATOR_SEVER_IP+ ":" +SIMULATOR_PORT+"/sensors/" +sensor_id;
         restTemplate.put(url, sensorNew);
     }
 }
